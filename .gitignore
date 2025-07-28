@@ -1,0 +1,8 @@
+**/Products-picture/
+**/models/
+**/__pycache__/
+**/output/
+logo.gif
+store.db
+*.txt
+readme.md
