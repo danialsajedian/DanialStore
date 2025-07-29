@@ -1,13 +1,29 @@
+# ======================================
+# 🌐 Flask Server برای مدیریت پرداخت زرین‌پال
+# ======================================
+
 from flask import Flask, request, jsonify
 import json, requests
 
+# ================================
+# 🧾 اطلاعات شناسایی زرین‌پال (Sandbox)
+# ================================
 app = Flask(__name__)
-MERCHANT = '12345678-1234-1234-1234-123456789012'
+MERCHANT = '12345678-1234-1234-1234-123456789012'  # شناسه تستی زرین‌پال
 ZP_API_VERIFY = "https://sandbox.zarinpal.com/pg/v4/payment/verify.json"
 
-# حافظه درون رم برای ذخیره سشن‌ها
+# ======================================================
+# 🧠 حافظه موقتی برای نگهداری authority و مبلغ پرداختی
+# ======================================================
 payment_sessions = {}
 
+# =====================================================
+# 💾 مسیر ذخیره سشن پرداخت
+# آدرس: /save-session
+# متد: POST
+# ورودی‌ها: authority و amount
+# عملکرد: ذخیره مقدار پرداختی بر اساس شناسه پرداخت
+# =====================================================
 @app.route("/save-session", methods=["POST"])
 def save_session():
     authority = request.form.get("authority") or request.json.get("authority")
@@ -25,7 +41,13 @@ def save_session():
     else:
         return jsonify({"error": "invalid data"}), 400
 
-
+# =====================================================
+# ✅ مسیر تأیید پرداخت از سمت زرین‌پال
+# آدرس: /verify
+# متد: GET
+# ورودی‌ها: Authority و Status
+# عملکرد: ارسال درخواست تأیید به زرین‌پال و نمایش نتیجه
+# =====================================================
 @app.route("/verify")
 def verify_payment():
     authority = request.args.get("Authority")
@@ -68,5 +90,8 @@ def verify_payment():
     except Exception as e:
         return f"❌ خطا در ارتباط: {str(e)}"
 
+# =======================
+# ▶️ اجرای سرور
+# =======================
 if __name__ == "__main__":
     app.run(port=5000)
