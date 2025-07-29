@@ -1,8 +1,9 @@
 # ===========================
 # 🖼️ کتابخانه‌های رابط گرافیکی
 # ===========================
-import tkinter as tk
-from tkinter import ttk, messagebox, filedialog
+import tkinter as tk        # ساخت پنجره لیبل دکمه گرافیکی
+from tkinter import ttk, messagebox, filedialog      # ایجاد پیام های هشدار اطلاعات یا خطا
+                                                     # دومی هم برای انتخاب فایل استفاده میشه
 
 # ===========================
 # 🗃️ پایگاه داده و زمان
@@ -21,7 +22,7 @@ import threading            # اجرای همزمان چند فرایند
 import os                   # برای کار با مسیر فایل‌ها
 import sys                  # مدیریت سیستم و مسیر اجرای اسکریپت
 import subprocess           # اجرای دستورهای سیستمی
-
+import tempfile             # برای ایجاد ساخت فایل موقت
 # ===========================
 # 🔐 رمزنگاری و توکن‌سازی
 # ===========================
@@ -974,13 +975,13 @@ def main_window():
         # =======================
         # 🧠 توابع مربوط به مشتری
         # =======================
-
+        # تابع مخفی یا نشان دادن اطلاعات تماس با ما
         def toggle_contact_info():
             if contact_frame.winfo_ismapped():
                 contact_frame.pack_forget()
             else:
                 contact_frame.pack(pady=(0, 10), anchor="ne")
-
+        # تابع برای اعمال فیلتر ها
         def show_filtered():
             tree.delete(*tree.get_children())
             global product_images
@@ -1017,7 +1018,7 @@ def main_window():
 
                 product_images.append(img)
                 tree.insert("", tk.END, text="", image=img, values=(row[1], row[2], f"{row[3]:,} تومان"))
-
+        # تابع پاکسازی فیلتر ها
         def reset_filters():
             search_var.set("")
             filter_var.set("مرتب‌سازی")
@@ -1027,7 +1028,7 @@ def main_window():
         # 🔊 جستجوی صوتی (فارسی)
         # =========================
         audio_result_queue = queue.Queue()
-
+        # تابع تبدیل گفتار به متن
         def start_voice_search():
             fs = 16000
             duration = 5
@@ -1051,7 +1052,7 @@ def main_window():
 
             audio_result_queue.put(text)
             main_win.after(100, check_voice_result)
-
+        # تابع برای دریافت نتایج و نمایش آن
         def check_voice_result():
             try:
                 text = audio_result_queue.get_nowait()
@@ -1131,6 +1132,7 @@ def select_item_and_remove():
 # ========================================
 # 💳 تابع ارسال درخواست پرداخت به زرین‌پال
 # ========================================
+# تابع ارسال اطلاعات پرداخت به سمت سرور
 def send_payment_request(amount):
     print("📤 درخواست پرداخت فراخوانی شد")
 
@@ -1175,8 +1177,6 @@ def send_payment_request(amount):
         print("🆔 authority دریافتی:", authority)
 
         # 📝 ساخت فایل HTML موقت برای ذخیره authority در سرور محلی
-        import tempfile
-        import webbrowser
 
         def generate_session_saver(authority, amount):
             html = f"""
@@ -1313,28 +1313,33 @@ def show_cart_window():
     if not cart:
         show_custom_message("خالی", "سبد خرید خالی است", "warning")
         return
-
+    # ساخت پنجره جدید
     win = tk.Toplevel(main_win)
     win.title("🛒 سبد خرید")
     center_window(win, 550, 400)
     win.configure(bg="#1e1e1e")
 
+    # نمایش سبد خرید شما
     tk.Label(win, text="📦 سبد خرید شما", font=("Vazir", 13, "bold"), bg="#1e1e1e", fg="white").pack(pady=10)
 
+    # تعریف متغیر tree
     columns = ("name", "count", "unit_price", "total_price")
     tree = ttk.Treeview(win, columns=columns, show="headings", height=10)
     tree.pack(padx=10, pady=10, fill="both", expand=True)
 
+    # وارد کردن نام ستون ها
     tree.heading("name", text="نام محصول")
     tree.heading("count", text="تعداد")
     tree.heading("unit_price", text="قیمت واحد")
     tree.heading("total_price", text="قیمت کل")
 
+    # تعیین موقعیت ستون ها
     tree.column("name", width=150, anchor="center")
     tree.column("count", width=80, anchor="center")
     tree.column("unit_price", width=100, anchor="center")
     tree.column("total_price", width=120, anchor="center")
 
+    # استایل دهی به ستون ها
     style = ttk.Style()
     style.configure("Treeview",
         background="#2c3e50",
@@ -1344,6 +1349,7 @@ def show_cart_window():
         borderwidth=0)
     style.map("Treeview", background=[('selected', '#1abc9c')])
 
+    # انجام محاسبات برای بدست آوردن جمع کل مبلغ
     total_all = 0
     for name, info in cart.items():
         count = info["count"]
