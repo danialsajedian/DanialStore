@@ -968,7 +968,7 @@ def main_window():
         # 📱 اطلاعات تماس (ابتدا مخفی)
         contact_frame = tk.Frame(top_controls, bg="#ecf0f1", bd=1, relief="solid")
         tk.Label(contact_frame, text="شماره تماس: 09399236753", bg="#ecf0f1").pack(anchor="w", padx=10, pady=5)
-        tk.Label(contact_frame, text="ایمیل: daniallsajedian@gmail.com", bg="#ecf0f1").pack(anchor="w", padx=10, pady=5)
+        tk.Label(contact_frame, text="daniallsajedian@gmail.com :ایمیل", bg="#ecf0f1").pack(anchor="w", padx=10, pady=5)
         contact_frame.pack_forget()
 
         # =======================
@@ -1060,6 +1060,9 @@ def main_window():
             except queue.Empty:
                 main_win.after(100, check_voice_result)
 
+        # ==============================
+        # 🎤 دکمه ضبط صدا
+        # ==============================
         mic_btn = ttk.Button(top_controls, text="🎤", command=start_voice_search)
         mic_btn.pack(side='right', padx=(5, 5))    
 
