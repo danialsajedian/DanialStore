@@ -26,7 +26,8 @@ DanialStore/
 ├── store.db                # دیتابیس SQLite
 ├── logo.gif                # لوگوی اپ
 ├── models/                 # مدل صوتی vosk (fa)
-├── Products-Pictur/       # عکس‌های محصولات
+├── Products-Pictur/        # عکس‌های محصولات
+├── output/                 # فایل نصبی و اجرای exe
 ├── *.txt                   # فاکتورهای خرید ذخیره‌شده
 ```
 
